@@ -54,7 +54,7 @@ function database() {
         var sql = [
           "create Database iconDb;",
           "USE iconDb CREATE TABLE `Icon` (`id` varchar(50) NOT NULL, `filename` varchar(50) NOT NULL, `file` TEXT NOT NULL, PRIMARY KEY (`id`));",
-          
+
           "create Database issueDb;",
           "USE issueDb CREATE TABLE `Issue` (`id` varchar(50) NOT NULL,`creatorID` varchar(50) NOT NULL,`issueGroupID` varchar(50) NOT NULL UNIQUE,`projectId` varchar(50) NOT NULL,`issueHead` TEXT NOT NULL UNIQUE,`issueText` TEXT NOT NULL,`open` bool NOT NULL,`reopen` bool NOT NULL,`date` DATE NOT NULL, PRIMARY KEY (`id`));",
           "USE issueDb CREATE TABLE `Group` (`id` varchar(50) NOT NULL,`groupName` varchar(50) NOT NULL UNIQUE,PRIMARY KEY (`id`));",
@@ -77,26 +77,46 @@ function database() {
           "ALTER TABLE `Notification` ADD CONSTRAINT `Notification_fk0` FOREIGN KEY (`appointmentId`) REFERENCES `Appointment`(`id`);",
           "ALTER TABLE `Appointment` ADD CONSTRAINT `Appointment_fk0` FOREIGN KEY (`calendarID`) REFERENCES `Calendar`(`id`);",
           "ALTER TABLE `UserAppointment` ADD CONSTRAINT `UserAppointment_fk0` FOREIGN KEY (`appointmentId`) REFERENCES `Appointment`(`id`);",
-          
+
           "CREATE Database projectDb;",
           "USE projectDb CREATE TABLE `Project` (`id` varchar(50) NOT NULL,`creatorId` varchar(50) NOT NULL,`iconId` varchar(50) NOT NULL`name` varchar(50) NOT NULL`description` TEXT NOT NULL,`creationDate` DATE NOT NULL,PRIMARY KEY (`id`));",
           "USE projectDb CREATE TABLE `Milestone` (`id` varchar(50) NOT NULL,`projectiId` varchar(50) NOT NULL,PRIMARY KEY (`id`));",
           "USE projectDb CREATE TABLE `IssueMilestone` (`issueId` varchar(50) NOT NULL,`milestoneId` varchar(50) NOT NULL,PRIMARY KEY (`issueId`,`milestoneId`));",
           "ALTER TABLE `Milestone` ADD CONSTRAINT `Milestone_fk0` FOREIGN KEY (`projectiId`) REFERENCES `Project`(`id`);",
           "ALTER TABLE `IssueMilestone` ADD CONSTRAINT `IssueMilestone_fk0` FOREIGN KEY (`milestoneId`) REFERENCES `Milestone`(`id`);",
-          
+
           "CREATE Database groupPermissionDb;",
           "USE groupPermissionDb CREATE TABLE `GroupPermission` (`groupId` varchar(50) NOT NULL,`permissionId` varchar(50) NOT NULL,PRIMARY KEY (`groupId`,`permissionId`));",
           "USE groupPermissionDb CREATE TABLE `UserPermission` (`userId` varchar(50) NOT NULL,`permissionId` varchar(50) NOT NULL,PRIMARY KEY (`userId`,`permissionId`));",
           "USE groupPermissionDb CREATE TABLE `Permission` (`id` varchar(50) NOT NULL,`permission` varchar(50) NOT NULL,PRIMARY KEY (`id`));",
           "ALTER TABLE `GroupPermission` ADD CONSTRAINT `GroupPermission_fk0` FOREIGN KEY (`permissionId`) REFERENCES `Permission`(`id`);",
-          "ALTER TABLE `UserPermission` ADD CONSTRAINT `UserPermission_fk0` FOREIGN KEY (`permissionId`) REFERENCES `Permission`(`id
+          "ALTER TABLE `UserPermission` ADD CONSTRAINT `UserPermission_fk0` FOREIGN KEY (`permissionId`) REFERENCES `Permission`(`id`);",
+
+          "CREATE DATABASE userDb",
+          "USE userDb CREATE TABLE `User` (`id` varchar(255) NOT NULL,`name` TEXT NOT NULL,`password` TEXT NOT NULL,`address` TEXT NOT NULL,`eMail` varchar(255) NOT NULL UNIQUE,`phoneNumber` DECIMAL NOT NULL,PRIMARY KEY (`id`));",
+          "USE userDb CREATE TABLE `Group` (`id` varchar(255) NOT NULL,`super` varchar(255), `head` varchar(255) NOT NULL,`description` TEXT NOT NULL,PRIMARY KEY (`id`));",
+          "USE userDb CREATE TABLE `UserGroup` (`userId` varchar(255) NOT NULL,`groupId` varchar(255) NOT NULL,PRIMARY KEY (`userId`,`groupId`));",
+          "USE userDb CREATE TABLE `PhoneNumber` (`id` varchar(255) NOT NULL,`number` varchar(255) NOT NULL UNIQUE,PRIMARY KEY (`id`));",
+          "USE userDb CREATE TABLE `UserPhoneNumber` (`userId` varchar(255) NOT NULL,`phoneNumberId` varchar(255) NOT NULL,`type` varchar(255) NOT NULL,PRIMARY KEY (`userId`,`phoneNumberId`));",
+          "USE userDb CREATE TABLE `GroupGroup` (`groupId` varchar(255) NOT NULL,`groupId` varchar(255) NOT NULL AUTO_INCREMENT,PRIMARY KEY (`groupId`,`groupId`));",
+          "ALTER TABLE `Group` ADD CONSTRAINT `group_fk0` FOREIGN KEY (`super`) REFERENCES `Group`(`id`)",
+          "ALTER TABLE `UserGroup` ADD CONSTRAINT `UserGroup_fk0` FOREIGN KEY (`userId`) REFERENCES `User`(`id`);",
+          "ALTER TABLE `UserGroup` ADD CONSTRAINT `UserGroup_fk1` FOREIGN KEY (`groupId`) REFERENCES `Group`(`id`);",
+          "ALTER TABLE `UserPhoneNumber` ADD CONSTRAINT `UserPhoneNumber_fk0` FOREIGN KEY (`userId`) REFERENCES `User`(`id`);",
+          "ALTER TABLE `UserPhoneNumber` ADD CONSTRAINT `UserPhoneNumber_fk1` FOREIGN KEY (`phoneNumberId`) REFERENCES `PhoneNumber`(`id`);",
         ];
 
-        for (var i in sql) {
-          conn.query(i, function (err, results, fields) {
-            if (err) throw err;
-            //console.log('error');
+        for (var i=0; i < sql.length; i++) {
+          console.log(i);
+          if(i % 10 == 0){
+            console.log(sql[i])
+          }
+          
+          conn.query(sql[i], function (err, results, fields) {
+            if (err) {
+              
+              throw err;
+            }
           })
         }
 
