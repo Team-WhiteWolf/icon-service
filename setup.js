@@ -51,6 +51,7 @@ conn.connect(
                     console.log("It's working, hurray")
                 }
             });
+            conn.end();
 
         }
     }
