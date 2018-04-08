@@ -5,6 +5,7 @@ var config = {
     user: 'wolf@icon-db',
     password: 'EJ6chESAmK',
     port: 3306,
+    database:"iconDb",
     ssl: true
 };
 const conn = new mysql.createConnection(config);
@@ -23,17 +24,27 @@ conn.connect(
                     throw err;
                 }
             });
-            sql = [
-                "create Database iconDb;",
-                "USE iconDb CREATE TABLE `Icon` (`id` varchar(50) NOT NULL, `filename` varchar(50) NOT NULL, `file` TEXT NOT NULL, PRIMARY KEY (`id`));",
-            ];
-            for (var i in sql) {
-                conn.query(i, function (err, results, fields) {
-                    if (err) {
-                        throw err;
-                    }
-                });
-            }
+
+            var sql = "create Database IF NOT EXISTS iconDb;";
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                }
+            });
+            sql = "USE iconDb CREATE TABLE `Icon` (`id` varchar(50) NOT NULL, `filename` varchar(50) NOT NULL, `file` TEXT NOT NULL, PRIMARY KEY (`id`));";
+
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                }
+            });
+
+            var sql = "DROP DATABASE iconDb;";
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                }
+            });
 
         }
     });
