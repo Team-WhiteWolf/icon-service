@@ -50,33 +50,11 @@ conn.connect(
                     throw err;
                 } else {
                     console.log("It's working, hurray")
-                }
-            });
-<<<<<<< HEAD
-
-            var sql = "create Database IF NOT EXISTS iconDb;";
-            conn.query(sql, function (err, results, fields) {
-                if (err) {
-                    throw err;
-                }
-            });
-            sql = "USE iconDb CREATE TABLE `Icon` (`id` varchar(50) NOT NULL, `filename` varchar(50) NOT NULL, `file` TEXT NOT NULL, PRIMARY KEY (`id`));";
-
-            conn.query(sql, function (err, results, fields) {
-                if (err) {
-                    throw err;
+                    conn.end();
                 }
             });
 
-            var sql = "DROP DATABASE iconDb;";
-            conn.query(sql, function (err, results, fields) {
-                if (err) {
-                    throw err;
-                }
-            });
-=======
-            conn.end();
->>>>>>> 40e2dcce17caa3e2de1a942fb4e6949591093fee
+           
 
         }
     }
