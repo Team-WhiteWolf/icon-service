@@ -8,6 +8,9 @@
     "mysql2": "^1.5.3",
     "uuid": "^3.2.1"
   },
+  "engines": {
+    "node": ">=0.12"
+  },
   "devDependencies": {},
   "scripts": {
     "setup": "node setup.js",
