@@ -9,7 +9,15 @@ const recieveId = 'icon-recieve'
 const sendId = 'icon-send'
 
 function prozessMessage(message) {
-    //TODO
+    switch(message.type) {
+        case "Add_Icon":
+            message.payload.data
+            break;
+        case "Get_Icon":
+
+            break;
+    }
+    
 }
 
 function requestMessage() {
