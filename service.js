@@ -16,7 +16,7 @@ function prozessMessage(message) {
             addIcon(message.payload.data, message.payload.name);
             break;
         case "Get_Icon":
-            
+            sendMessage(message.trackingID, message.payload.recipient);
             break;
     }
     
@@ -45,16 +45,24 @@ function handleMessage(error, recieveMessage) {
     requestMessage();
 }
 
-var message = {
-  body: 'Test message',
-  customProperties: {
-    testproperty: 'TestValue'
-  }
-};
 
-/*
-serviceBusService.sendQueueMessage(sendId, message, function (error) {
-  if (!error) {
 
-  }
-});*/
+function sendMessage(id, nextReciever) {
+    var message = {
+        body: 'Test message',
+        trackingID: id,
+	    sender: "icon-sender",
+	    reciever: nextReciever,
+	    type: "",
+	    payload: "",
+        customProperties: {
+          testproperty: 'TestValue'
+        }
+      };
+
+    serviceBusService.sendQueueMessage(sendId, message, function (error) {
+        if (!error) {
+            
+        }
+      });
+}
