@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
 
+const uuidv4 = require('uuid/v4');
+
 const azure = require('azure');
 
 const path = 'Endpoint=sb://servicequeues.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=AUNiefT6dHz3ivqbYvpteI+LlwvOWE2M0OleRycSXzs=';
@@ -11,13 +13,22 @@ const sendId = 'icon-send'
 function prozessMessage(message) {
     switch(message.type) {
         case "Add_Icon":
-            message.payload.data
+            addIcon(message.payload.data, message.payload.name);
             break;
         case "Get_Icon":
-
+            sendMessage(message.trackingID, message.payload.recipient);
             break;
     }
     
+}
+
+function addIcon(data, filename) {
+    var sql = "INSERT INTO Icon (id ,filename, data) VALUES (?, ?, ?);";
+    var values = [uuidv4, filename, data];
+
+    conn.query(sql, values, function (err, results, fields) {
+        if (err) throw err;
+    });
 }
 
 function requestMessage() {
@@ -34,16 +45,24 @@ function handleMessage(error, recieveMessage) {
     requestMessage();
 }
 
-var message = {
-  body: 'Test message',
-  customProperties: {
-    testproperty: 'TestValue'
-  }
-};
 
-/*
-serviceBusService.sendQueueMessage(sendId, message, function (error) {
-  if (!error) {
 
-  }
-});*/
+function sendMessage(id, nextReciever) {
+    var message = {
+        body: 'Test message',
+        trackingID: id,
+	    sender: "icon-sender",
+	    reciever: nextReciever,
+	    type: "",
+	    payload: "",
+        customProperties: {
+          testproperty: 'TestValue'
+        }
+      };
+
+    serviceBusService.sendQueueMessage(sendId, message, function (error) {
+        if (!error) {
+            
+        }
+      });
+}

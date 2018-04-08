@@ -1,13 +1,14 @@
 
 const mysql = require('mysql2');
 var config = {
-    host: 'icon-db.mysql.database.azure.com',
-    user: 'wolf@icon-db',
-    password: 'EJ6chESAmK',
+    host: 'ww-data-host.mysql.database.azure.com',
+    user: 'database@ww-data-host',
+    password: 'uJHeCu3P!',
     port: 3306,
     database:"iconDb",
     ssl: true
 };
+
 const conn = new mysql.createConnection(config);
 
 conn.connect(
@@ -18,12 +19,40 @@ conn.connect(
         }
         else {
             console.log("Connection established.");
-            var sql = "DROP DATABASE iconDb;";
+
+            var sql = "DROP DATABASE IF EXISTS iconDb;";
+
             conn.query(sql, function (err, results, fields) {
                 if (err) {
                     throw err;
                 }
             });
+
+            sql = "CREATE DATABASE iconDb; ";
+
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                }
+            });
+
+            sql = "USE iconDb;"
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                }
+            });
+
+            sql = "CREATE TABLE `Icon` (`id` varchar(50) NOT NULL, `filename` varchar(50) NOT NULL, `file` TEXT NOT NULL, PRIMARY KEY (`id`));";
+
+            conn.query(sql, function (err, results, fields) {
+                if (err) {
+                    throw err;
+                } else {
+                    console.log("It's working, hurray")
+                }
+            });
+<<<<<<< HEAD
 
             var sql = "create Database IF NOT EXISTS iconDb;";
             conn.query(sql, function (err, results, fields) {
@@ -45,7 +74,11 @@ conn.connect(
                     throw err;
                 }
             });
+=======
+            conn.end();
+>>>>>>> 40e2dcce17caa3e2de1a942fb4e6949591093fee
 
         }
-    });
+    }
+);
 

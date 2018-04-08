@@ -5,10 +5,12 @@
   "main": "service.js",
   "dependencies": {
     "azure": "^2.2.1-preview",
-    "mysql2": "^1.5.3"
+    "mysql2": "^1.5.3",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {},
   "scripts": {
+    "setup": "node setup.js",
     "start": "node service.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
