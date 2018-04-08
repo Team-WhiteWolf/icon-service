@@ -16,7 +16,8 @@ function prozessMessage(message) {
             addIcon(message.payload.data, message.payload.name);
             break;
         case "Get_Icon":
-            sendMessage(message.trackingID, message.payload.recipient);
+            var sqlPayload = sqlLookUp(message.payload.id);
+            sendMessage(message.trackingID, message.payload.recipient, message.type);
             break;
     }
     
@@ -45,24 +46,22 @@ function handleMessage(error, recieveMessage) {
     requestMessage();
 }
 
+function sqlLookUp(id) {
+    var sql = "SELECT * FROM Icon WHERE Icon.id == " + id
+}
 
-
-function sendMessage(id, nextReciever) {
+function sendMessage(id, nextReciever, mType, payload) {
     var message = {
-        body: 'Test message',
         trackingID: id,
 	    sender: "icon-sender",
 	    reciever: nextReciever,
-	    type: "",
-	    payload: "",
-        customProperties: {
-          testproperty: 'TestValue'
-        }
+	    type: mType,
+        payload: payload
       };
 
     serviceBusService.sendQueueMessage(sendId, message, function (error) {
         if (!error) {
-            
+            console.log("it works");
         }
       });
 }
